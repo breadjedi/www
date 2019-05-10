@@ -1,0 +1,57 @@
+<link rel='import' href='bower_components/polymer/polymer.html' />
+<link rel='import' href='./bubble-elem.html' />
+
+<dom-module id='bubble-app'>
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <template>
+    <template is="dom-repeat" items="[[bubbles]]">
+      <bubble-elem x="[[item.x]]" y="[[item.y]]" dx="[[item.dx]]" dy="[[item.dy]]" color="[[item.color]]" on-bubble-popped="handleBubblePop"></bubble-elem>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'bubble-app',
+
+      properties: {
+        bubbles: {
+          type: Array,
+          value: [],
+        }
+      },
+
+      listeners: {
+        'tap': 'onClick',
+      },
+
+      colors: [
+        '#faa',
+        '#afa',
+        '#aaf',
+        '#ffa',
+        '#faf',
+        '#aff',
+        '#eee',
+      ],
+
+      onClick: function(e) {
+        this.push('bubbles', {
+          x: e.detail.x,
+          y: e.detail.y,
+          color: this.colors[Math.floor(Math.random()*this.colors.length)],
+          dx: Math.random() - 0.5,
+          dy: Math.random() - 0.5,
+        });
+      },
+
+      handleBubblePop: function(e) {
+        this.splice('bubbles', e.model.get('index'), 1);
+      },
+    });
+  </script>
+</dom-module>

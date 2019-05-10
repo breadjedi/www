@@ -1,0 +1,77 @@
+<link rel='import' href='bower_components/polymer/polymer.html' />
+
+<dom-module id='bubble-elem'>
+  <style>
+    :host div {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.3) 95%);
+    }
+  </style>
+  <template>
+    <div style="left: [[x]]px; top: [[y]]px; width: [[diameter]]px; height: [[diameter]]px; margin-left: -[[radius]]px; margin-top: -[[radius]]px; background-color: [[color]]; border: 1px solid [[color]];"></div>
+  </template>
+  <script>
+    Polymer({
+      is: 'bubble-elem',
+
+      properties: {
+        x: Number,
+        y: Number,
+        radius: {
+          type: Number,
+          value: 10,
+        },
+        diameter: {
+          type: Number,
+          computed: 'computeDiameter(radius)',
+        },
+        ticks: {
+          type: Number,
+          value: 0,
+        },
+        tickMax: {
+          type: Number,
+          value: 200,
+        },
+        tickPeriod: {
+          type: Number,
+          value: 10,
+        },
+        growth: {
+          type: Number,
+          value: 1.01,
+        },
+        color: {
+          type: String,
+          value: "lightblue",
+        },
+        dx: Number,
+        dy: Number,
+      },
+
+      attached: function() {
+        this.async(this.onTick, this.tickPeriod);
+      },
+
+      onTick: function() {
+        this.ticks++;
+
+        if (this.ticks < this.tickMax) {
+          // Grow this bubble
+          this.radius = this.radius * this.growth;
+          this.async(this.onTick, this.tickPeriod);
+          this.x += this.dx;
+          this.y += this.dy;
+        } else {
+          // Pop this bubble
+          this.fire('bubble-popped');
+        }
+      },
+
+      computeDiameter: function(radius) {
+        return radius * 2;
+      },
+    });
+  </script>
+</dom-module>
