@@ -1,1 +1,424 @@
-Hi!
+<html>
+
+<head>
+
+<script type="text/javascript" src="js/range.js"></script>
+<script type="text/javascript" src="js/timer.js"></script>
+<script type="text/javascript" src="js/slider.js"></script>
+<link type="text/css" rel="StyleSheet" href="css/winclassic.css" />
+
+<script type="text/javascript">
+function disableSelection(element) {
+    element.onselectstart = function() {
+        return false;
+    };
+    element.unselectable = "on";
+    element.style.MozUserSelect = "none";
+    element.style.cursor = "default";
+}
+</script>
+<style type="text/css">
+*::selection {
+    background:transparent;
+}
+
+*::-moz-selection {
+    background:transparent;
+}
+
+*::-webkit-selection {
+    background:transparent;
+}
+div.furniture {
+    font-size : 0.8em;
+    overflow : visible;
+    color : white;
+    text-shadow : 1px 2px grey;
+}
+</style>
+
+<script type="text/javascript">
+function Set_Cookie( name, value, expires, path, domain, secure ) 
+{
+// set time, it's in milliseconds
+var today = new Date();
+today.setTime( today.getTime() );
+
+/*
+if the expires variable is set, make the correct 
+expires time, the current script below will set 
+it for x number of days, to make it for hours, 
+delete * 24, for minutes, delete * 60 * 24
+*/
+if ( expires )
+{
+expires = expires * 1000 * 60 * 60 * 24;
+}
+var expires_date = new Date( today.getTime() + (expires) );
+
+document.cookie = name + "=" +escape( value ) +
+( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) + 
+( ( path ) ? ";path=" + path : "" ) + 
+( ( domain ) ? ";domain=" + domain : "" ) +
+( ( secure ) ? ";secure" : "" );
+}
+
+function Get_Cookie( check_name ) {
+	// first we'll split this cookie up into name/value pairs
+	// note: document.cookie only returns name=value, not the other components
+	var a_all_cookies = document.cookie.split( ';' );
+	var a_temp_cookie = '';
+	var cookie_name = '';
+	var cookie_value = '';
+	var b_cookie_found = false; // set boolean t/f default f
+	
+	for ( i = 0; i < a_all_cookies.length; i++ )
+	{
+		// now we'll split apart each name=value pair
+		a_temp_cookie = a_all_cookies[i].split( '=' );
+		
+		
+		// and trim left/right whitespace while we're at it
+		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
+	
+		// if the extracted name matches passed check_name
+		if ( cookie_name == check_name )
+		{
+			b_cookie_found = true;
+			// we need to handle case where cookie has no value but exists (no = sign, that is):
+			if ( a_temp_cookie.length > 1 )
+			{
+				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
+			}
+			// note that in cases where cookie is initialized but no value, null is returned
+			return cookie_value;
+			break;
+		}
+		a_temp_cookie = null;
+		cookie_name = '';
+	}
+	if ( !b_cookie_found )
+	{
+		return null;
+	}
+}			
+</script>
+
+<script type="text/javascript">
+
+///////
+/// Mousemove stuff
+//////
+
+var moving;
+var movingX;
+var movingY;
+var clickX;
+var clickY;
+
+var maxZIndex = 0;
+
+function status(msg) {
+  document.getElementById('status').innerHTML = msg;
+}
+
+function generateLog() {
+  var str = '';
+
+  var refDiv = document.getElementById('placementArea');
+
+  for ( var i = 0 ; i < furniture.length ; ++i ) {
+    var div = furniture[i];
+
+    var left = (div.offsetLeft - refDiv.offsetLeft)*scaleFactor;
+    var top = (div.offsetTop - refDiv.offsetTop)*scaleFactor;
+
+    str += 'newFurniture("' + div.name + '",' + div.myWidth + ',' + div.myHeight + ',' + left + ',' + top + ',"' + div.style.backgroundColor + '");\n';
+  }
+
+  document.getElementById('log').value = str;
+
+  Set_Cookie( 'logValue', str, 30 );
+}
+
+function runLog() {
+  for ( var i = 0 ; i < furniture.length ; ++i ) {
+    document.body.removeChild( furniture[i] );
+  }
+
+  furniture = new Array();
+
+  eval( document.getElementById('log').value );
+}
+
+function rand(n) { return Math.floor(Math.random()*n); }
+
+function mousedblclick(event, target) {
+  if ( event.button != 0 ) return;
+
+  //var target = event.target;
+  while ( target.className != 'furniture' ) {
+    if ( target.parentNode ) target = target.parentNode;
+    else return;
+  }
+
+  var v = target.offsetHeight;
+  target.style.height = target.offsetWidth;
+  target.style.width = v;
+
+  var v = target.myHeight;
+  target.myHeight = target.myWidth;
+  target.myWidth = v;
+
+  generateLog();
+}
+
+function mousedown(event, target) {
+  //status('down: ' + event.clientX + ',' + event.clientY);
+
+  //status('hi');
+
+  //var target = event.target; //.parentNode;
+
+  if ( moving ) { document.body.focus(); return true; }
+
+  //var target = event.target;
+  //status( 'down2: ' + event + '/' + target );
+  while ( !target.className || target.className != 'furniture' ) {
+    if ( target.parentNode ) target = target.parentNode;
+    else return true;
+  }
+
+  if ( event.button == 2 ) {
+    target.style.backgroundColor = '#' +
+                                   rand(16).toString(16) + rand(16).toString(16) +
+                                   rand(16).toString(16) + rand(16).toString(16) +
+                                   rand(16).toString(16) + rand(16).toString(16);
+    generateLog();
+    return;
+  }
+
+  moving = target;
+
+  movingX = moving.offsetLeft;
+  movingY = moving.offsetTop;
+  clickX = event.clientX;
+  clickY = event.clientY;
+
+  return;
+}
+
+function mouseup(event) {
+  var target = moving;
+
+  if ( !moving ) return;
+
+  moving = null;
+  document.body.focus();
+
+  if ( !target ) return;
+
+  generateLog();
+}
+
+function mousemove(event) {
+  //status( moving + ':' + movingX + ',' + movingY + '/' + clickX + ',' + clickY + '/' + event.clientX + ',' + event.clientY );
+
+  if ( !moving ) return;
+
+  domove( moving,
+          movingX + event.clientX - clickX,
+          movingY + event.clientY - clickY );
+}
+
+function domove( target, x, y ) {
+    if ( target.style.zIndex < maxZIndex ) target.style.zIndex = ++maxZIndex;
+
+    target.style.left = x;
+    target.style.top = y;
+
+    /* Clip card */
+/*
+    var left = 0, top = 0, width = card.offsetWidth, height = card.offsetHeight;
+    if ( card.offsetLeft < cardTable.offsetLeft )
+      left = cardTable.offsetLeft - card.offsetLeft;
+    if ( card.offsetLeft + card.offsetWidth > cardTable.offsetLeft + cardTable.offsetWidth )
+      width = cardTable.offsetLeft + cardTable.offsetWidth - card.offsetLeft;
+    if ( card.offsetTop < cardTable.offsetTop )
+      top = cardTable.offsetTop - card.offsetTop;
+    if ( card.offsetTop + card.offsetHeight > cardTable.offsetTop + cardTable.offsetHeight )
+      height = cardTable.offsetTop + cardTable.offsetHeight - card.offsetTop;
+
+    card.style.clip = 'rect(' + top + ',' + width + ',' + height + ',' + left + ')';
+*/
+}
+
+</script>
+
+<script type="text/javascript">
+var pics = [
+             [ "2492 Whitney A.png", 9460, 10240, "All" ]
+];
+
+var scaleFactor = 8;
+var furniture = new Array();
+
+function main() {
+  //document.onselectstart = function(){return false;};
+
+  window.setTimeout( function() { disableSelection( document.getElementsByTagName('body')[0] ); }, 0 );
+
+  repaint();
+}
+
+function repaint() {
+  var display = '';
+
+  for ( var i = 0 ; i < pics.length ; ++i ) {
+    display += '<center>' + pics[i][3] + '<br>' +
+               '<img id="placementArea" draggable="false" src="' + pics[i][0] + '" + width="' + pics[i][1]/scaleFactor + '" height="' + pics[i][2]/scaleFactor + '">' +
+               '<br><br></center>';
+  }
+
+  document.getElementById('foo').innerHTML = display;
+
+  var t = Get_Cookie('logValue');
+  if ( t ) {
+    document.getElementById('log').value = t;
+    runLog();
+  } else {
+    document.getElementById('log').value =
+        'newFurniture("Queen Bed",60,80,432,264,"rgb(212, 149, 189)");\n' +
+        'newFurniture("DeskE",40,24,1696,168,"rgb(107, 189, 189)");\n' +
+        'newFurniture("Couch",35,66,2984,1992,"rgb(210, 180, 140)");\n' +
+        'newFurniture("Head",66,12,408,144,"rgb(94, 123, 111)");\n' +
+        'newFurniture("Piano",53,12,200,1376,"rgb(150, 72, 249)");\n' +
+        'newFurniture("Big Bk",59,16,-1120,3880,"rgb(154, 231, 156)");\n' +
+        'newFurniture("Otto",20,26,2648,2200,"rgb(189, 137, 32)");\n' +
+        'newFurniture("Bk 1",20,11,792,2472,"rgb(197, 150, 215)");\n' +
+        'newFurniture("Bk 2",23,12,1032,2384,"rgb(193, 248, 60)");\n' +
+        'newFurniture("Hmp",18,18,-800,192,"rgb(144, 221, 27)");\n' +
+        'newFurniture("End",18,18,-312,2736,"rgb(232, 137, 95)");\n' +
+        'newFurniture("Billy1",32,11,24,2480,"rgb(174, 174, 38)");\n' +
+        'newFurniture("cd",8,7,208,2080,"rgb(178, 208, 181)");\n' +
+        'newFurniture("cd",8,7,352,2072,"rgb(178, 208, 181)");\n' +
+        'newFurniture("Coffee",47,24,-1912,312,"rgb(123, 61, 51)");\n' +
+        'newFurniture("Billyshort",32,11,408,2680,"rgb(131, 100, 79)");\n' +
+        'newFurniture("Bskt1",21,18,-1032,2496,"rgb(11, 177, 54)");\n' +
+        'newFurniture("Bskt2",21,18,-944,2904,"rgb(97, 255, 141)");\n' +
+        'newFurniture("Bar",16,16,608,3312,"rgb(197, 95, 44)");\n' +
+        'newFurniture("Billy angle",24,37,-344,2008,"rgb(66, 210, 251)");\n' +
+        'newFurniture("bst1",20,20,-776,760,"rgb(150, 219, 39)");\n' +
+        'newFurniture("bst2",20,20,-624,1824,"rgb(105, 189, 88)");\n' +
+        'newFurniture("glass",40,24,2960,1744,"rgb(172, 103, 208)");\n' +
+        'newFurniture("File",16,16,-1216,2232,"rgb(76, 251, 172)");\n' +
+        'newFurniture("dresser",36,18,-792,1344,"rgb(235, 36, 95)");\n' +
+        'newFurniture("end wht",18,20,-1344,3352,"rgb(189, 76, 38)");\n' +
+        'newFurniture("side tbl",36,12,488,2224,"rgb(74, 253, 201)");\n' +
+        'newFurniture("DeskM",52,28,-1736,1744,"rgb(60, 124, 136)");\n' +
+        'newFurniture("Table",37,55,144,3424,"rgb(187, 109, 208)");\n' +
+        'newFurniture("Cart",36,24,336,2968,"rgb(113, 35, 179)");\n' +
+        'newFurniture("BillyK",25,10,128,2688,"rgb(191, 96, 147)");\n' +
+        'newFurniture("Desk M2",41,21,-568,3200,"rgb(17, 213, 162)");\n' +
+        'newFurniture("King Bed",80,76,6864,3344,"blue");';
+
+    runLog();
+  }
+}
+function newFurniture( name, width, height, posx, posy, color ) {
+  var div = document.createElement('div');
+  disableSelection( div );
+  div.className = 'furniture';
+  //div.style.overflow = 'hidden';
+  div.style.position = 'absolute';
+  div.style.left = posx/scaleFactor + document.getElementById('placementArea').offsetLeft + 'px';
+  div.style.top = posy/scaleFactor + document.getElementById('placementArea').offsetTop + 'px';
+  div.style.width = width*10/scaleFactor + 'px';
+  div.style.height = height*10/scaleFactor + 'px';
+  div.style.backgroundColor = color;
+  document.body.appendChild( div );
+
+  div.name = name;
+  div.myWidth = width;
+  div.myHeight = height;
+
+  div.innerHTML = '<center>' + name + '</center>';
+
+  if ( navigator.userAgent.indexOf('MSIE') != -1 ) {
+    //div.onmousemove = function(event){ mousemove(event); };
+    div.onmousedown = function(){ mousedown(event,div); }; //function(event) { mousedown(event,div); }
+    //div.onmouseup = function(event) { mouseup(event); };
+    div.oncontextmenu = function() { return false; };
+    div.ondblclick = function(){ mousedblclick(event,div); };
+  } else {
+    div.onmousedown = function(event){ mousedown(event,event.target); };
+    div.oncontextmenu = function() { return false; };
+    div.ondblclick = function(event){ mousedblclick(event,event.target); };
+  }
+
+  furniture.push( div );
+  generateLog();
+}
+
+function reset() {
+  Set_Cookie( 'logValue', '', 30 );
+  window.location = window.location;
+}
+</script>
+</head>
+
+<body onload="main()"
+      onmousemove="mousemove(event);"
+      onmouseup="mouseup(event);"
+      onresize="runLog()">
+
+<center>
+<table><tr><td>
+<label id="scale">Scale: 1:8</label>
+</td><td>
+<div class="slider" id="slider-1" tabIndex="1">
+   <input class="slider-input" id="slider-input-1" name="slider-input-1"/>
+</div>
+</td></tr>
+</table>
+
+<div style="position: absolute; top: 4px; left: 95%;"><a style="text-decoration: none; border: 1px solid blue; padding: 0px 5px 2px 5px;" href="javascript:reset();void(0)">reset</a></div>
+
+<script type="text/javascript">
+var s = new Slider(document.getElementById("slider-1"), document.getElementById("slider-input-1"));
+s.setMinimum( -10 );
+s.setMaximum( -1 );
+s.setBlockIncrement( 1 );
+s.setValue( -scaleFactor );
+s.onchange = sliderUpdate;
+
+function sliderUpdate() {
+  scaleFactor = -s.getValue();
+  document.getElementById('scale').innerHTML = 'Scale: 1:'+scaleFactor;
+
+  repaint();
+}
+</script>
+
+<br><br>
+Add furniture:
+  Name=<input type="text" size="10" id="fname">,
+  Width=<input type="text" size="5" id="width"> inches,
+  Height=<input type="text" size="5" id="height"> inches.
+  <a href="javascript:newFurniture(fname.value,width.value,height.value,100,100,'blue')">Go</a>
+</center>
+
+<br>
+<center>Right-click to change color. Double-click to change orientation.</center>
+<br><br><hr><br>
+
+  <textarea spellcheck="false" cols="100" rows="10" id="log"></textarea>
+  <a href="javascript:runLog()">Run Log</a>
+
+<br><br><hr><br><br>
+
+<span name="status" id="status"></span>
+<span name="foo" id="foo"></span>
+</body>
+
+</html>
