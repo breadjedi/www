@@ -9,8 +9,8 @@
 
 <script type="text/javascript">
 function disableSelection(element) {
-    element.onselectstart = function() {
-        return false;
+    element.onselectstart = function(a) {
+	return a && a.target && (a.target.nodeName == 'TEXTAREA' || a.target.nodeName == 'INPUT');
     };
     element.unselectable = "on";
     element.style.MozUserSelect = "none";
@@ -18,6 +18,7 @@ function disableSelection(element) {
 }
 </script>
 <style type="text/css">
+/* Disable these rules which seem unnecessary now
 *::selection {
     background:transparent;
 }
@@ -29,6 +30,7 @@ function disableSelection(element) {
 *::-webkit-selection {
     background:transparent;
 }
+*/
 div.furniture {
     font-size : 0.8em;
     overflow : visible;
