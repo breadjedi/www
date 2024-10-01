@@ -1,0 +1,211 @@
+              EVAN PEDRO GREENBERG
+
+                egreenbe@gmail.com
+      http://linkedin.com/in/EvanPedroGreenberg
+                  650-387-9082
+
+Backend software engineer with rigorous background in both theory and
+practice of Operating Systems, Networking, and Distributed Systems
+seeking a role that will challenge and inspire. Rapidly translates
+ideas from concept to working prototype implementation with robust,
+elegant, and extensible code that scales.
+
+EDUCATION
+
+Stanford University Department of Computer Science, School of Engineering
+  PhD (incomplete), September 2000 to March 2008 - Distributed Systems Group
+  MS, August 2002 - Distributed Systems Group
+
+Princeton University Department of Computer Science, School of Engineering
+  BSE Magna Cum Laude, June 2000 - Overall GPA 3.9, Departmental GPA 4.1
+
+EXPERIENCE
+
+Google Inc - Mountain View, CA - December 2012 to Present
+Senior Software Engineer; Staff Software Engineer; Senior Staff Software Engineer
+
+    Managed a team of 20 engineers focused on the storage stack and core
+        infrastructure for the Google search index
+    Responsibility for improving performance, monitoring, and debuggability of
+        the Google search index (Caffeine)
+    Shared ownership for transactional system on bigtable (Percolator)
+    Selected projects (please ask for details):
+        Bigtable cache optimizations: automated analysis toolkit
+        Extensible monitoring dashboard
+        Percolator:
+            Improvements to auxiliary locking mechanism including deadlock-free
+                persistence across transactions
+            New membership management service
+            Improved tools for debugging transactions
+        Ownership of cross-datacenter backup for full Caffeine repository:
+            Resource saving lower latency redesign of incremental backup system
+            Automated management system
+
+    Technologies: C++, Bigtable, Javascript, HTML, CSS, HTTP
+
+Veetle Inc - Palo Alto, CA - July 2006 to November 2012
+Software Engineer
+
+    First (non-founder) employee at live streaming video startup; effective
+        role: Chief Architect
+    Took startup from founder's concept to 15M monthly unique website
+        visitors and over 20M installs of custom browser plugin
+    Grew team from 2 to 15 (primarily engineers); helped manage, design, and
+        oversee software development and hardware planning/acquisition
+    Selected projects:
+        Custom Hardware: designed and built-out a custom x86 hardware
+            solution for highly efficient video streaming
+        Browser Plugin (player): helped design, implement, and package for
+            distribution browser plugins built around VLC allowing users
+            to view video streams directly in their browsers on Windows,
+            Mac, and Linux
+        Browser Plugin (core): developed a novel next-generation p2p video
+            distribution network for live video providing best-in-class
+            performance in the real world and under a variety of
+            challenging network conditions
+        Simulation Framework: developed a custom network simulation that
+            allowed testing and verification of the actual protocol
+            implementation across a range of likely and corner-case
+            conditions
+        Operations: hands-on management of the day-to-day running of the
+            site across four datacenters and two continents, including
+            capacity planning and vendor negotiations
+        Partnerships: on-site setup and support for broadcast partners
+            including SAP Open, The World Series of Football, Formula Drift,
+            and World Series of Poker
+        Website: helped steer web development to ensure the website
+            implementation would scale as needed
+        Reenveloping: developed an efficient tool to convert streams
+            between ASF, HLS (MPEG2TS), and FLV transport formats to allow
+            mobile viewing of every channel without additional hardware
+            expenditure
+        Mobile App: designed and prototyped a cross-platform framework
+            that allows accelerated mobile UI app development
+        Archiving: developed a custom software and hardware stack to
+            support scalable, multi-platform on-demand viewing of live
+            streams after the conclusion of an event
+        RTMP Ingress: a custom server that speaks standard RTMP so that
+            users can broadcast directly from Flash on their computers or
+            from a variety of off-the-shelf broadcasting solutions
+
+    Technologies: C, C++, Perl, Python, Javascript, HTML, CSS, HTTP,
+            ASF, FLV, MPEG2TS, H264, AAC, MP3, IPv4, TCP, Linux,
+            Windows, Mac OS X, NSIS, MFC
+
+Kealia Inc (acquired by Sun Microsystems 4/2004) - Palo Alto, CA - June 2003 to June 2006
+Developer (part-time)
+
+    Wrote protocol analyzer based on tcpdump for custom RPC protocol
+    Customized C++ solution on set top box to support demos
+    Developed SNMP support across various internal components and tools
+
+    Technologies: C, C++, SNMP, Linux, IPv4, TCP
+
+Microsoft Corporation, Visual Studio Analyzer - Redmond, WA - June 2001 to August 2001
+Summer Intern (Developer)
+
+    Designed native managed C++ components for interfacing with customer code
+
+    Technologies: C, C++, Managed C++, Windows
+
+Microsoft Corporation, Application Center 2000 - Redmond, WA - June 2000 to August 2000
+Summer Intern (Developer)
+
+    Implemented command-line tool for administration of highly available clusters
+
+    Technologies: C, C++, VBScript, XML, DCOM, WMI, MFC, Windows
+
+Oracle Corporation, PL/SQL Runtime Group - Redwood Shores, CA - June 1999 to August 1999
+Summer Intern
+
+    Designed next-generation expression handler for ILGEN phase of PL/SQL compiler
+
+    Technologies: C, C++, SQL, Linux
+
+Hewlett Packard (now Agilent), Manufacturing Test Division - Loveland, CO - June 1998 to August 1998
+SEED (Summer Intern)
+
+    Embedded systems application development in VxWorks
+
+    Technologies: C, C++, VxWorks, HP/UX
+
+Virginia Tech Computing Center, Computer Purchasing Department - Blacksburg, VA - June 1994 to June 2000
+Programmer/Analyst
+
+    Sysadmin and software development on Solaris/NeXT, designed databases
+    and applications (using NeXT EOF) to replace paper forms
+
+    Technologies: C, Objective C, Perl, SQL, Postscript, Solaris, NeXTstep
+
+TEACHING
+
+Winter 2007 - Instructor - Stanford University
+    CS349 - Advanced Object-Oriented Programming
+
+Sprint 2005 - Teaching Assistant - Stanford University
+    CS244b - Distributed Systems
+
+Winter 2003 - Teaching Assistant - Stanford University
+    CS249 - Object-Oriented Programming from a Modeling and Simulation Perspective
+
+GRADUATE RESEARCH
+
+Robust and defensible system to address the problem of spam
+Today's most effective spam prevention techniques all attempt to use
+heuristics and machine learning to identify incoming spam on behalf of
+a user or group. Unfortunately, that inevitably leads to the property
+that some percentage of legitimate messages will be incorrectly flagged
+as spam, breaking the delivery guarantees that most users expect from
+systems like email. It's straightforward to reduce the spam identification
+problem to the halting problem, and, I suspect, possible to reduce an
+approximate spam identification problem (for instance, the feasibility
+of correctly identifying x% of messages without error for some positive
+value x) to the halting problem (or perhaps, a similar approximation-based
+version of the halting problem). However, if one enacts a set of simple
+economic disincentives around the transmission of unwanted messages
+(in spirit not too different from existing AS peering rules), it changes
+the rules to a game we can win; it becomes possible to allow end-users,
+who have the unique ability to characterize email with perfect accuracy,
+to penalize in a meaningful way those who send unwanted email, while
+protecting legitimate use cases (such as individual correspondence and
+even mailing lists).
+
+UNDERGRADUATE RESEARCH
+
+Fall 1999: Seminar in Computer Systems (Graduate)
+    Prototyped and implemented a secure messaging layer over the
+    existing nntp/usenet infrastructure
+
+Junior Independent Work: Checkpointing Tools for Multiple Operating Systems
+    Researched saving/restoring the state of Linux and Windows
+    on i586 hardware
+
+Junior Independent Work: Doom on Scout
+    Ported source code for Doom, a popular game, to Scout, a
+    network-centric operating system
+
+Senior Independent Work: Novel Interfaces to Scalable Display Wall Technologies
+    Developed system for automated calibration of inexpensive video
+    cameras for use in hand tracking
+
+AWARDS AND HONORS
+
+Stanford:    Graduate Service Recognition Award, Stanford Graduate Fellowship
+Princeton:   Microsoft Technical Award, Andersen Consulting Prize in Computer
+             Science, Tau Beta Pi Engineering Honor Society, Phi Beta Kappa
+             Honor Society, Sigma Xi Society
+High School: Robert C. Byrd Honor Scholar (Virginia), National Merit
+             Scholar, Tandy National Technology Scholar, Xerox National
+             Minority Scholar, National Hispanic Scholar, JETS TEAMS
+             Competition (1st national (tie), 2nd national)
+
+ACTIVITIES
+
+Coordinator and Instructor - 2002 to 2009
+    Stanford Self Defense Seminars
+
+Black Belt and Instructor - 1987 to 2010
+    Martial Arts: Karate (Zen Bu Du, Tang-Soo-Do, Universal), Hsing-I Kung Fu
+
+Member - 1996 to 2000
+    Princeton University Varsity Fencing Team
