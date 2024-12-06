@@ -24,24 +24,33 @@ EXPERIENCE
 Google Inc - Mountain View, CA - December 2012 to Present
 Senior Software Engineer; Staff Software Engineer; Senior Staff Software Engineer
 
-    Managed a team of 20 engineers focused on the storage stack and core
-        infrastructure for the Google search index
-    Responsibility for improving performance, monitoring, and debuggability of
-        the Google search index (Caffeine)
-    Shared ownership for transactional system on bigtable (Percolator)
-    Selected projects (please ask for details):
-        Bigtable cache optimizations: automated analysis toolkit
-        Extensible monitoring dashboard
-        Percolator:
-            Improvements to auxiliary locking mechanism including deadlock-free
-                persistence across transactions
-            New membership management service
-            Improved tools for debugging transactions
-        Ownership of cross-datacenter backup for full Caffeine repository:
-            Resource saving lower latency redesign of incremental backup system
-            Automated management system
+    Tech Lead and Manager for the "Data Indexing Infrastructure" team, which is
+        responsible for the storage stack, core infrastructure, efficiency, and
+        reliability for the "indexing" phase of generating the Google web search index.
+    Management (2016 to Present):
+        Peak: 17 direct reports
+        Current: 5 direct reports, 3 sub-managers, org size: 19, across US and China
+        Participated in hiring, project assignment, evaluation, reorganization,
+            promotion, regretted and non-regretted attrition, layoffs, etc
+        Demonstrated ability to build a leadership bench (including not just
+            promotions on the technical track but also growth of fledgling managers)
+        Management style: empathetic, enthusiastic, innovative, bottom-up; I leverage
+            my technical depth to create an effective and confident team
+    Technical Leadership (concurrent with management):
+        Responsibility for improving performance, monitoring, and debuggability
+            of the Google search index
+        Took on shared ownership for indexing's custom transactional system on
+            bigtable; proposed, prototyped, and drove the creation of a novel
+            alternative transactional system (first on bigtable, later on spanner)
+            which provided weakened ACID guarantees in exchange for consistent
+            performance.
+        Designed and drove fundamental improvements to the way indexing is distributed
+            across datacenters.
+        Participated in two cycles of "throw away the old indexing system, build a new
+            one from the ground up"
+        Responsible for delivering $XXM annually in resource efficiency projects
 
-    Technologies: C++, Bigtable, Javascript, HTML, CSS, HTTP
+    Technologies: C++, Bigtable, Spanner, Go, Javascript, HTML, CSS, HTTP
 
 Veetle Inc - Palo Alto, CA - July 2006 to November 2012
 Software Engineer
