@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Furniture Placer</title>
+
+<style type="text/css">
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  background-color: #f7f9fa;
+  color: #333;
+}
+
+.controls-card {
+  max-width: 800px;
+  margin: 0 auto 16px auto;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.slider-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-group input[type="range"] {
+  width: 140px;
+  accent-color: #0066cc;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+input[type="text"] {
+  font-size: 16px; /* Prevents auto-zoom on iOS */
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  background: #0066cc;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.help-text {
+  text-align: center;
+  font-size: 0.85em;
+  color: #64748b;
+  margin: 8px 0;
+}
+
+/* Furniture element styling */
+div.furniture {
+  position: absolute;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  touch-action: none; /* Crucial for immediate pointer dragging on mobile */
+  cursor: grab;
+}
+
+div.furniture:active {
+  cursor: grabbing;
+}
+
+/* Floorplan wrapper */
+#canvas-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  text-align: center;
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+#placementArea {
+  display: inline-block;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+
+/* Mobile Quick Action Toolbar */
+#mobile-toolbar {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 30px;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 99999;
+}
+
+#mobile-toolbar button {
+  background: #334155;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+textarea#log {
+  width: 100%;
+  max-width: 800px;
+  margin: 8px auto;
+  display: block;
+  user-select: text;
+  -webkit-user-select: text;
+  font-family: monospace;
+  font-size: 12px;
+}
+</style>
+
+<script type="text/javascript">
+function Set_Cookie( name, value, expires, path, domain, secure ) {
+  var today = new Date();
+  today.setTime( today.getTime() );
+  if ( expires ) {
+    expires = expires * 1000 * 60 * 60 * 24;
+  }
+  var expires_date = new Date( today.getTime() + (expires) );
+  document.cookie = name + "=" + escape( value ) +
+    ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) + 
+    ( ( path ) ? ";path=" + path : "" ) + 
+    ( ( domain ) ? ";domain=" + domain : "" ) +
+    ( ( secure ) ? ";secure" : "" );
+}
+
+function Get_Cookie( check_name ) {
+  var a_all_cookies = document.cookie.split( ';' );
+  for ( var i = 0 ; i < a_all_cookies.length ; i++ ) {
+    var a_temp_cookie = a_all_cookies[i].split( '=' );
+    var cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
+    if ( cookie_name == check_name ) {
+      if ( a_temp_cookie.length > 1 ) {
+        return unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
+      }
+      return '';
+    }
+  }
+  return null;
+}
+</script>
+
+<script type="text/javascript">
+var moving = null;
+var movingX = 0;
+var movingY = 0;
+var clickX = 0;
+var clickY = 0;
+var maxZIndex = 10;
+var activeSelectedDiv = null;
+
+var pics = [
+  [ "903Channing.png", 668 * 3.765, 1090 * 3.765, "All" ]
+];
+
+var scaleFactor = 3;
+var furniture = [];
+
+function rand(n) { return Math.floor(Math.random()*n); }
+
+function randomizeColor(target) {
+  target.style.backgroundColor = '#' +
+    rand(16).toString(16) + rand(16).toString(16) +
+    rand(16).toString(16) + rand(16).toString(16) +
+    rand(16).toString(16) + rand(16).toString(16);
+  generateLog();
+}
+
+function rotateFurniture(target) {
+  var v = target.offsetHeight;
+  target.style.height = target.offsetWidth + 'px';
+  target.style.width = v + 'px';
+
+  var temp = target.myHeight;
+  target.myHeight = target.myWidth;
+  target.myWidth = temp;
+
+  generateLog();
+}
+
+function generateLog() {
+  var str = '';
+  var refDiv = document.getElementById('placementArea');
+  if (!refDiv) return;
+
+  var refRect = refDiv.getBoundingClientRect();
+  var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+  var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  var refLeft = refRect.left + scrollLeft;
+  var refTop = refRect.top + scrollTop;
+
+  for ( var i = 0 ; i < furniture.length ; ++i ) {
+    var div = furniture[i];
+    var left = (div.offsetLeft - refLeft) * scaleFactor;
+    var top = (div.offsetTop - refTop) * scaleFactor;
+    str += 'newFurniture("' + div.name + '",' + div.myWidth + ',' + div.myHeight + ',' + left + ',' + top + ',"' + div.style.backgroundColor + '");\n';
+  }
+
+  document.getElementById('log').value = str;
+  Set_Cookie( 'logValue', str, 30 );
+}
+
+function runLog() {
+  for ( var i = 0 ; i < furniture.length ; ++i ) {
+    if (furniture[i].parentNode) {
+      furniture[i].parentNode.removeChild( furniture[i] );
+    }
+  }
+  furniture = [];
+  eval( document.getElementById('log').value );
+}
+
+function pointerdown(event, target) {
+  if ( event.button === 2 ) {
+    randomizeColor(target);
+    return;
+  }
+
+  activeSelectedDiv = target;
+  showMobileToolbar(target);
+
+  moving = target;
+  movingX = moving.offsetLeft;
+  movingY = moving.offsetTop;
+  clickX = event.clientX;
+  clickY = event.clientY;
+
+  if (target.setPointerCapture) {
+    try { target.setPointerCapture(event.pointerId); } catch(e){}
+  }
+}
+
+function pointermove(event) {
+  if ( !moving ) return;
+  var deltaX = event.clientX - clickX;
+  var deltaY = event.clientY - clickY;
+  domove( moving, movingX + deltaX, movingY + deltaY );
+}
+
+function pointerup(event) {
+  if ( !moving ) return;
+  if (moving.releasePointerCapture) {
+    try { moving.releasePointerCapture(event.pointerId); } catch(e){}
+  }
+  moving = null;
+  generateLog();
+}
+
+function domove( target, x, y ) {
+  if ( parseInt(target.style.zIndex || '0', 10) < maxZIndex ) {
+    target.style.zIndex = ++maxZIndex;
+  }
+  target.style.left = x + 'px';
+  target.style.top = y + 'px';
+}
+
+function showMobileToolbar(target) {
+  var tb = document.getElementById('mobile-toolbar');
+  if (!tb) return;
+  document.getElementById('selected-piece-name').innerText = target.name || 'Selected';
+  tb.style.display = 'flex';
+}
+
+function newFurniture( name, width, height, posx, posy, color ) {
+  var div = document.createElement('div');
+  div.className = 'furniture';
+  div.name = name;
+  div.myWidth = parseFloat(width);
+  div.myHeight = parseFloat(height);
+
+  var refDiv = document.getElementById('placementArea');
+  var refRect = refDiv.getBoundingClientRect();
+  var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+  var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  var baseLeft = refRect.left + scrollLeft;
+  var baseTop = refRect.top + scrollTop;
+
+  div.style.left = (posx / scaleFactor + baseLeft) + 'px';
+  div.style.top = (posy / scaleFactor + baseTop) + 'px';
+  div.style.width = (div.myWidth * 10 / scaleFactor) + 'px';
+  div.style.height = (div.myHeight * 10 / scaleFactor) + 'px';
+  div.style.backgroundColor = color || 'blue';
+  div.innerHTML = '<span>' + name + '</span>';
+
+  // Support both Pointer events & double-tap mobile gestures
+  var lastTap = 0;
+  div.addEventListener('pointerdown', function(e) {
+    var currentTime = new Date().getTime();
+    var tapLength = currentTime - lastTap;
+    if (tapLength < 300 && tapLength > 0) {
+      rotateFurniture(div);
+      e.preventDefault();
+    }
+    lastTap = currentTime;
+    pointerdown(e, div);
+  });
+
+  div.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    randomizeColor(div);
+  });
+
+  div.addEventListener('dblclick', function(e) {
+    rotateFurniture(div);
+  });
+
+  document.body.appendChild( div );
+  furniture.push( div );
+  generateLog();
+}
+
+function repaint() {
+  var display = '';
+  for ( var i = 0 ; i < pics.length ; ++i ) {
+    display += '<div style="margin-bottom: 8px; font-weight:600;">' + pics[i][3] + '</div>' +
+               '<img id="placementArea" draggable="false" src="' + pics[i][0] + '" width="' + (pics[i][1] / scaleFactor) + '" height="' + (pics[i][2] / scaleFactor) + '">';
+  }
+  document.getElementById('foo').innerHTML = display;
+
+  var t = Get_Cookie('logValue');
+  if ( t ) {
+    document.getElementById('log').value = t;
+    runLog();
+  } else {
+    document.getElementById('log').value = '';
+    runLog();
+  }
+}
+
+function updateScale(val) {
+  scaleFactor = parseInt(val, 10);
+  document.getElementById('scale-label').innerText = 'Scale: 1:' + scaleFactor;
+  repaint();
+}
+
+function resetData() {
+  Set_Cookie( 'logValue', '', 30 );
+  window.location.reload();
+}
+
+window.addEventListener('pointermove', pointermove);
+window.addEventListener('pointerup', pointerup);
+window.addEventListener('pointercancel', pointerup);
+window.addEventListener('resize', function() { runLog(); });
+
+window.onload = function() {
+  repaint();
+};
+</script>
+</head>
+
+<body>
+
+<div class="controls-card">
+  <div class="controls-row" style="justify-content: space-between;">
+    <div class="slider-group">
+      <label id="scale-label" style="font-weight: 600;">Scale: 1:3</label>
+      <input type="range" id="scale-slider" min="1" max="10" step="1" value="3" oninput="updateScale(this.value)">
+    </div>
+    <button class="btn btn-secondary" onclick="resetData()">Reset Layout</button>
+  </div>
+
+  <div class="form-group">
+    <label>Name: <input type="text" size="8" id="fname" value="Chair"></label>
+    <label>W (in): <input type="text" size="4" id="width" value="30"></label>
+    <label>H (in): <input type="text" size="4" id="height" value="30"></label>
+    <button class="btn" onclick="newFurniture(fname.value, width.value, height.value, 100, 100, '#2563eb')">Add Piece</button>
+  </div>
+
+  <div class="help-text">
+    Desktop: Double-click to rotate • Right-click to recolor<br>
+    Touch: Double-tap to rotate • Tap piece to show quick toolbar
+  </div>
+</div>
+
+<div id="canvas-wrapper">
+  <div id="foo"></div>
+</div>
+
+<!-- Mobile toolbar that pops up when a piece is touched -->
+<div id="mobile-toolbar">
+  <span id="selected-piece-name" style="font-size: 13px; font-weight: bold; margin-right: 4px;"></span>
+  <button onclick="if(activeSelectedDiv) rotateFurniture(activeSelectedDiv);">Rotate 90°</button>
+  <button onclick="if(activeSelectedDiv) randomizeColor(activeSelectedDiv);">Color</button>
+  <button onclick="document.getElementById('mobile-toolbar').style.display='none';">Done</button>
+</div>
+
+<div class="controls-card" style="margin-top: 16px;">
+  <textarea spellcheck="false" rows="6" id="log"></textarea>
+  <div style="text-align: center; margin-top: 8px;">
+    <button class="btn btn-secondary" onclick="runLog()">Run Log</button>
+  </div>
+</div>
+
+</body>
+</html>
