@@ -405,7 +405,11 @@ function repaint() {
     document.getElementById('log').value = t;
     runLog();
   } else {
-    document.getElementById('log').value = '';
+    document.getElementById('log').value = '' +
+      'newFurniture("Chair",34,29,1212.46875,2886,"url(Article%20Ellow.webp)",315);\n' +
+      'newFurniture("Bed",95,65,726.46875,1332,"url(Storage%20Daybed.jpeg)",270);\n' +
+      'newFurniture("Sofa",90,39,516.46875,2472,"url(White%20Couch.webp)",270);\n' +
+      '';
     runLog();
   }
 }
