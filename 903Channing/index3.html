@@ -230,7 +230,7 @@ function setFurnitureFill(target, fillValue) {
   target.fill = fillValue;
   if (typeof fillValue === 'string' && fillValue.trim().toLowerCase().startsWith('url(')) {
     target.style.backgroundImage = fillValue;
-    target.style.backgroundSize = 'contain';
+    target.style.backgroundSize = 'cover';
     target.style.backgroundRepeat = 'no-repeat';
     target.style.backgroundPosition = 'center';
     target.style.backgroundColor = 'transparent';
@@ -469,7 +469,11 @@ window.onload = function() {
 </div>
 
 <div class="controls-card" style="margin-top: 16px;">
-  <textarea spellcheck="false" rows="6" id="log"></textarea>
+  <textarea spellcheck="false" rows="6" id="log">
+newFurniture("Chair",34,29,1212.46875,2886,"url(Article%20Ellow.webp)",315);
+newFurniture("Bed",95,65,726.46875,1332,"url(Storage%20Daybed.jpeg)",270);
+newFurniture("Sofa",95,30,516.46875,2472,"url(White%20Couch.webp)",270);
+  </textarea>
   <div style="text-align: center; margin-top: 8px;">
     <button class="btn btn-secondary" onclick="runLog()">Run Log</button>
   </div>
