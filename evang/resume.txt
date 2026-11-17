@@ -22,7 +22,7 @@ Princeton University Department of Computer Science, School of Engineering
 EXPERIENCE
 
 Google Inc - Mountain View, CA - February 2026 to Present
-Google DeepMind - Senior Staff Software Engineer
+Google DeepMind: Senior Staff Software Engineer
 
     Tech Lead and Manager for GDM Sandboxing Team; responsible for efficient and safe
         code execution for models and agents
@@ -31,7 +31,7 @@ Google DeepMind - Senior Staff Software Engineer
         and Research use cases
 
 Google Inc - Mountain View, CA - December 2025 to February 2026
-Google Cloud - Senior Staff Software Engineer
+Google Cloud: Senior Staff Software Engineer
 
     Tech Lead and Manager for Recitation team; responsible for flagging cases where a model
         response recites passages from training data rather than generating original content
@@ -42,7 +42,7 @@ Google Cloud - Senior Staff Software Engineer
     Please ask for more details!
 
 Google Inc - Mountain View, CA - December 2012 to December 2025
-Indexing - Senior Software Engineer; Staff Software Engineer; Senior Staff Software Engineer
+Indexing: Senior -> Staff -> Senior Staff Software Engineer
 
     Tech Lead and Manager for the "Data Indexing Infrastructure" team, which is
         responsible for the storage stack, core infrastructure, efficiency, and
